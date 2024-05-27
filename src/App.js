@@ -1,7 +1,29 @@
 import React from "react";
 import Customer from "./components/Customer/Customer";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+  createTheme,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    marginTop: 50,
+    overflowX: "auto",
+  },
+  table: {
+    minWidth: 1080,
+  },
+}));
 
 function App() {
+  const classes = useStyles();
   const customers = [
     {
       id: 1,
@@ -31,9 +53,25 @@ function App() {
 
   return (
     <>
-      {customers.map((customer) => (
-        <Customer key={customer.id} customer={customer}></Customer>
-      ))}
+      <Paper className={classes.root}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>번호</TableCell>
+              <TableCell>이미지</TableCell>
+              <TableCell>이름</TableCell>
+              <TableCell>생년월일</TableCell>
+              <TableCell>성별</TableCell>
+              <TableCell>직업</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {customers.map((customer) => (
+              <Customer key={customer.id} customer={customer}></Customer>
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
     </>
   );
 }
