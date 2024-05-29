@@ -1,5 +1,7 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
+import getCustomers from "./hooks/getCustomers";
 import Customer from "./components/Customer/Customer";
+import Loading from "./components/Loading/Loading";
 import {
   Paper,
   Table,
@@ -9,6 +11,7 @@ import {
   TableCell,
   createTheme,
 } from "@mui/material";
+
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,32 +27,24 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const customers = [
-    {
-      id: 1,
-      image: "https://picsum.photos/64/64?random=1",
-      name: "홍길동",
-      birthday: "950711",
-      gender: "남자",
-      job: "대학생",
-    },
-    {
-      id: 2,
-      image: "https://picsum.photos/64/64?random=2",
-      name: "이지형",
-      birthday: "940221",
-      gender: "남자",
-      job: "직장인",
-    },
-    {
-      id: 3,
-      image: "https://picsum.photos/64/64?random=3",
-      name: "김짱구",
-      birthday: "990512",
-      gender: "여자",
-      job: "대학생",
-    },
-  ];
+
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const customerData = await getCustomers();
+        setCustomers(customerData);
+        setLoading(false);
+      } catch {
+        setError(true);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -66,9 +61,17 @@ function App() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {customers.map((customer) => (
-              <Customer key={customer.id} customer={customer}></Customer>
-            ))}
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            ) : (
+              customers.map((customer) => (
+                <Customer key={customer.id} customer={customer}></Customer>
+              ))
+            )}
           </TableBody>
         </Table>
       </Paper>
