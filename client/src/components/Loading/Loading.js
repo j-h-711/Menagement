@@ -1,25 +1,13 @@
 import * as React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
-import Box from "@mui/material/Box";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
-    marginTop: "200px",
-    marginBottom: "200px",
-  },
-}));
+import styles from "./Loading.module.scss";
 
 const Loading = () => {
-  const classes = useStyles();
   return (
-    <Box className={classes.root}>
-      <CircularProgress color="success" />
-    </Box>
+    <>
+      <div className={styles.loading}>
+        <div className="spinner-border text-secondary" role="status"></div>
+      </div>
+    </>
   );
 };
 

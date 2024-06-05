@@ -5,16 +5,14 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.18",
-    "@mui/material": "^5.15.18",
-    "@mui/styles": "^5.15.18",
-    "@mui/system": "^5.15.15",
     "cra-template": "1.2.0",
     "install": "^0.13.0",
     "npm": "^10.8.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
+    "sweetalert": "^2.1.2",
     "web-vitals": "^4.0.1"
   },
   "scripts": {
@@ -40,5 +38,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.77.3"
   }
 }
