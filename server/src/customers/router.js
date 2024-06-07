@@ -24,12 +24,29 @@ router.post("/add", async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res) => {
-  const id = req.body;
+// 고객 정보 업데이트
+router.patch("/patch/:id", async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
   try {
-    const customer = await Customer.findById(id);
-    await Customer.delete(customer);
-    res.status(200).json(customers);
+    const updatedCustomer = await Customer.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
+    if (!updatedCustomer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+    res.status(200).json(updatedCustomer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// 고객 삭제
+router.delete("/delete", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const customer = await Customer.findByIdAndDelete(id);
+    res.status(200).json(customer);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

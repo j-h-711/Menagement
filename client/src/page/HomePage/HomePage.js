@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import postLogin from "../../hooks/postLogin";
+import swal from "sweetalert";
 import styles from "./HomePage.module.scss";
 
 const HomePage = () => {
@@ -19,9 +20,18 @@ const HomePage = () => {
     setPassword(password);
   };
 
+  // login form reset
   const resetForm = () => {
     setUsername("");
     setPassword("");
+  };
+
+  const successAlert = (msg) => {
+    swal("Success", msg, "success");
+  };
+
+  const errorAlert = (msg) => {
+    swal("Fail", msg, "error");
   };
 
   const handleLogin = async (e) => {
@@ -29,10 +39,10 @@ const HomePage = () => {
 
     try {
       await postLogin(username, password);
-      alert("관리자님, 환영합니다.");
+      successAlert("관리자님, 환영합니다.");
       navigate("/main");
     } catch (error) {
-      alert("아이디&비밀번호를 정확하게 입력해주세요.");
+      errorAlert("아이디&비밀번호를 정확하게 입력해주세요.");
       resetForm();
     }
   };

@@ -10,10 +10,11 @@ const MainPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // 모달 관리 상태
+  // modal
   const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
 
-  // 전체 회원 조회
+  // fetch all customers
   const fetchData = async () => {
     try {
       const customerData = await getCustomers();
@@ -23,15 +24,6 @@ const MainPage = () => {
       setError(true);
       setLoading(false);
     }
-  };
-
-  // 회원 추가 모달 닫는 함수
-  const closeModal = () => {
-    setAddModal(false);
-  };
-
-  const handleAdd = () => {
-    fetchData();
   };
 
   useEffect(() => {
@@ -52,7 +44,7 @@ const MainPage = () => {
           신규 회원 추가
         </button>
       </div>
-      <table className="table">
+      <table className="table" style={{ textAlign: "center" }}>
         <thead className="thead-dark">
           <tr>
             <th scope="col">고객코드</th>
@@ -76,6 +68,8 @@ const MainPage = () => {
                 key={customer._id}
                 customer={customer}
                 fetchData={fetchData}
+                editModal={editModal}
+                setEditModal={setEditModal}
               ></Customer>
             ))
           )}
@@ -85,7 +79,7 @@ const MainPage = () => {
         <AddModal
           addModal={addModal}
           setAddModal={setAddModal}
-          handleAddCustomer={handleAdd}
+          fetchData={fetchData}
         ></AddModal>
       )}
     </>

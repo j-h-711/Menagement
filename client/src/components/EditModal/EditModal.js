@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import swal from "sweetalert";
-import postCustomer from "./../../hooks/postCustomer";
-import styles from "./AddModal.module.scss";
+import patchCustomer from "../../hooks/patchCustomer";
+import styles from "./EditModal.module.scss";
 
-const AddModal = ({ addModal, setAddModal, fetchData }) => {
-  // 신규교객
-  const [newCustomer, setNewCustomer] = useState({
-    name: "",
-    birthday: "",
-    gender: "",
-    job: "",
+const EditModal = ({ customer, editModal, setEditModal, fetchData }) => {
+  // edit customer state
+  const [editCustomer, setEditCustomer] = useState({
+    name: customer.name,
+    birthday: customer.birthday,
+    gender: customer.gender,
+    job: customer.job,
   });
 
   const handleChange = (e) => {
-    setNewCustomer({ ...newCustomer, [e.target.name]: e.target.value });
+    setEditCustomer({ ...editCustomer, [e.target.name]: e.target.value });
   };
 
   const successAlert = (msg) => {
@@ -25,35 +25,38 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
   };
 
   const closeModal = () => {
-    setAddModal(false);
+    setEditModal(false);
   };
 
   // 회원가입
   const handleAddCustomer = async (e) => {
     e.preventDefault();
 
-    if (newCustomer.name.length === 0) {
+    if (editCustomer.name.length === 0) {
       errorAlert("이름을 입력해주세요!");
     } else if (
-      newCustomer.birthday.length === 0 ||
-      newCustomer.birthday.length < 6 ||
-      newCustomer.birthday.length > 6
+      editCustomer.birthday.length === 0 ||
+      editCustomer.birthday.length < 6 ||
+      editCustomer.birthday.length > 6
     ) {
       errorAlert("6자리 생년월일을 제대로 입력해주세요!");
-    } else if (newCustomer.gender !== "남자" && newCustomer.gender !== "여자") {
+    } else if (
+      editCustomer.gender !== "남자" &&
+      editCustomer.gender !== "여자"
+    ) {
       errorAlert("'남자' 혹은 '여자' 로 입력해주세요!");
-    } else if (newCustomer.job.length <= 0) {
+    } else if (editCustomer.job.length <= 0) {
       errorAlert("직업을 입력해주세요!");
     } else {
       // 서버에 신규 회원 등록 라우터 위치
       try {
-        await postCustomer(newCustomer);
-        successAlert(`${newCustomer.name} 님이 회원 정보에 추가되었습니다.`);
+        await patchCustomer(customer._id, editCustomer);
+        successAlert(`${editCustomer.name} 님의 회원 정보가 수정되었습니다.`);
         closeModal();
-        console.log("Customer added successfully!");
+        console.log("Customer updated successfully!");
         fetchData();
       } catch (error) {
-        console.error("Error adding customer:", error);
+        console.error("Error updating customer:", error);
       }
     }
   };
@@ -63,7 +66,7 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
       <div className={styles.overlay}>
         <div className={styles.modal}>
           <div className={styles.header}>
-            <h2>신규 회원 추가</h2>
+            <h2>회원 정보 수정</h2>
             <button className={styles.close} onClick={closeModal}>
               X
             </button>
@@ -75,8 +78,8 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
                 className={styles.input}
                 type="text"
                 name="name"
-                value={newCustomer.name}
-                placeholder="이름..."
+                value={editCustomer.name}
+                placeholder="이름 입력"
                 onChange={handleChange}
               />
             </div>
@@ -86,8 +89,8 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
                 className={styles.input}
                 type="text"
                 name="birthday"
-                value={newCustomer.birthday}
-                placeholder="생년월일 6자리"
+                value={editCustomer.birthday}
+                placeholder="6자리 생년월일 입력"
                 onChange={handleChange}
               />
             </div>
@@ -96,7 +99,7 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
               <select
                 className={styles.select}
                 name="gender"
-                value={newCustomer.gender}
+                value={editCustomer.gender}
                 onChange={handleChange}
               >
                 <option value="">성별을 선택하세요</option>
@@ -109,7 +112,7 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
               <select
                 className={styles.select}
                 name="job"
-                value={newCustomer.job}
+                value={editCustomer.job}
                 onChange={handleChange}
               >
                 <option value="">직업을 선택하세요</option>
@@ -123,7 +126,7 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
             </div>
             <div className={styles["button-container"]}>
               <button className={styles.submit} type="submit">
-                회원 추가
+                정보 수정
               </button>
             </div>
           </form>
@@ -133,4 +136,4 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
   );
 };
 
-export default AddModal;
+export default EditModal;
