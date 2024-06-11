@@ -12,7 +12,6 @@ const MainPage = () => {
 
   // modal
   const [addModal, setAddModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
 
   // fetch all customers
   const fetchData = async () => {
@@ -32,7 +31,7 @@ const MainPage = () => {
 
   return (
     <>
-      <div className={styles.menuContainer}>
+      {/* <div className={styles.menuContainer}>
         <p>JH 회원 관리 시스템</p>
         <button
           type="button"
@@ -43,14 +42,44 @@ const MainPage = () => {
         >
           신규 회원 추가
         </button>
-      </div>
+      </div> */}
+      <nav className={`navbar ${styles.navbar}`}>
+        <div className="container-fluid">
+          <a className={`navbar-brand ${styles["navbar-brand"]}`}>
+            JH Management System
+          </a>
+          <form className="d-flex" role="search">
+            <input
+              className={`form-control me-2 ${styles["form-control"]}`}
+              type="search"
+              placeholder="회원이름 검색..."
+              aria-label="Search"
+            ></input>
+            <button
+              className={`btn btn-outline-success ${styles["searchBtn"]}`}
+              type="submit"
+            >
+              Search
+            </button>
+            <button
+              className={`btn btn-outline-secondary ${styles["addCustomerBtn"]}`}
+              type="button"
+              onClick={() => {
+                setAddModal(true);
+              }}
+            >
+              회원추가
+            </button>
+          </form>
+        </div>
+      </nav>
       <table className="table" style={{ textAlign: "center" }}>
         <thead className="thead-dark">
           <tr>
             <th scope="col">고객코드</th>
             <th scope="col">이름</th>
             <th scope="col">생년월일</th>
-            <th scope="col">생년월일</th>
+            <th scope="col">성별</th>
             <th scope="col">직업</th>
             <th scope="col"></th>
           </tr>
@@ -58,7 +87,7 @@ const MainPage = () => {
         <tbody>
           {loading ? (
             <tr>
-              <th colSpan={6} className="text-center">
+              <th colSpan={6}>
                 <Loading />
               </th>
             </tr>
@@ -68,8 +97,6 @@ const MainPage = () => {
                 key={customer._id}
                 customer={customer}
                 fetchData={fetchData}
-                editModal={editModal}
-                setEditModal={setEditModal}
               ></Customer>
             ))
           )}

@@ -21,6 +21,15 @@ const customerSchema = new Schema({
   job: {
     type: String,
   },
+  phone: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  etc: {
+    type: String,
+  },
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

@@ -1,35 +1,26 @@
-.menuContainer {
-  width: 100%;
-  height: 6rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 1rem;
+.navbar {
+  width: 95%; // 너비를 80%로 설정
+  margin: 0 auto; // 중앙에 배치
+  padding: 1rem 0;
 
-  p {
-    margin: 0;
-    padding: 0;
-    padding-left: 1rem;
+  .container-fluid {
     display: flex;
     align-items: center;
-    height: 100%;
-    font-weight: bold;
-    font-size: 1.2rem;
+    justify-content: space-between;
   }
-}
 
-.addButton {
-  width: 10rem;
-  background-color: #007bff;
-  color: white;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #343a40;
+  }
 
-  &:hover {
-    background-color: #0056b3;
+  .form-control {
+    width: 200px;
+    margin-right: 0.5rem;
+  }
+
+  .searchBtn {
+    margin-right: 3rem;
   }
 }

@@ -14,9 +14,17 @@ router.get("/", async (req, res) => {
 
 // 신규 고객 추가
 router.post("/add", async (req, res) => {
-  const { name, birthday, gender, job } = req.body;
+  const { name, birthday, gender, job, phone, address, etc } = req.body;
   try {
-    const newCustomer = new Customer({ name, birthday, gender, job });
+    const newCustomer = new Customer({
+      name,
+      birthday,
+      gender,
+      job,
+      phone,
+      address,
+      etc,
+    });
     await newCustomer.save();
     res.status(201).json(newCustomer);
   } catch (error) {
