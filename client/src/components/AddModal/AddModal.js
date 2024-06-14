@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import postCustomer from "./../../hooks/postCustomer";
 import styles from "./AddModal.module.scss";
 
-const AddModal = ({ addModal, setAddModal, fetchData }) => {
+const AddModal = ({ page, addModal, setAddModal, fetchData }) => {
   // 신규교객
   const [newCustomer, setNewCustomer] = useState({
     name: "",
@@ -96,7 +96,7 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
         successAlert(`${newCustomer.name} 님이 회원 정보에 추가되었습니다.`);
         closeModal();
         console.log("Customer added successfully!");
-        fetchData();
+        fetchData(page);
       } catch (error) {
         console.error("Error adding customer:", error);
       }
@@ -194,6 +194,16 @@ const AddModal = ({ addModal, setAddModal, fetchData }) => {
                 <option value="주부">주부</option>
                 <option value="무직">무직</option>
               </select>
+            </div>
+            <div className={styles["form-group"]}>
+              <p>비고</p>
+              <textarea
+                className={styles.etcArea}
+                name="etc"
+                value={newCustomer.etc}
+                placeholder="기타 정보..."
+                onChange={handleChange}
+              />
             </div>
             <div className={styles["button-container"]}>
               <button className={styles.submit} type="submit">

@@ -4,7 +4,7 @@ import deleteCustomer from "../../hooks/deleteCustomer";
 import TrLoading from "../TrLoading/TrLoading";
 import EditModal from "../EditModal/EditModal";
 
-export const Customer = ({ customer, fetchData }) => {
+export const Customer = ({ customer, fetchData, page }) => {
   const [loading, setLoading] = useState(false);
 
   const [editModal, setEditModal] = useState(false);
@@ -14,7 +14,7 @@ export const Customer = ({ customer, fetchData }) => {
     setLoading(true);
     try {
       await deleteCustomer(customer._id);
-      await fetchData();
+      await fetchData(page);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -77,6 +77,7 @@ export const Customer = ({ customer, fetchData }) => {
           editModal={editModal}
           setEditModal={setEditModal}
           fetchData={fetchData}
+          page={page}
         ></EditModal>
       )}
     </>

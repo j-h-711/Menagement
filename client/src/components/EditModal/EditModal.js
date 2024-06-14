@@ -4,9 +4,8 @@ import swal from "sweetalert";
 import patchCustomer from "../../hooks/patchCustomer";
 import styles from "./EditModal.module.scss";
 
-const EditModal = ({ customer, editModal, setEditModal, fetchData }) => {
+const EditModal = ({ customer, editModal, setEditModal, fetchData, page }) => {
   // edit customer state
-  console.log(customer);
   const [editCustomer, setEditCustomer] = useState({
     name: customer.name,
     birthday: customer.birthday,
@@ -100,7 +99,7 @@ const EditModal = ({ customer, editModal, setEditModal, fetchData }) => {
         successAlert(`${editCustomer.name} 님의 회원 정보가 수정되었습니다.`);
         closeModal();
         console.log("Customer updated successfully!");
-        fetchData();
+        fetchData(page);
       } catch (error) {
         console.error("Error updating customer:", error);
       }
@@ -198,6 +197,16 @@ const EditModal = ({ customer, editModal, setEditModal, fetchData }) => {
                 <option value="주부">주부</option>
                 <option value="무직">무직</option>
               </select>
+            </div>
+            <div className={styles["form-group"]}>
+              <p>비고</p>
+              <textarea
+                className={styles.etcArea}
+                name="etc"
+                value={editCustomer.etc}
+                placeholder="기타 정보..."
+                onChange={handleChange}
+              />
             </div>
             <div className={styles["button-container"]}>
               <button className={styles.submit} type="submit">

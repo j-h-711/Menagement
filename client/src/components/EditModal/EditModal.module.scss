@@ -62,6 +62,17 @@
   border-radius: 4px;
 }
 
+.etcArea {
+  flex: 1;
+  padding: 10px;
+  padding-left: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: auto;
+  min-height: 6rem;
+  resize: vertical;
+}
+
 .select {
   flex: 1;
   padding: 10px;

@@ -1,11 +1,16 @@
 import { React, useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import getCustomers from "../../hooks/getCustomers";
 import Customer from "../../components/Customer/Customer";
 import Loading from "../../components/Loading/Loading";
 import AddModal from "../../components/AddModal/AddModal";
+import Pagination from "../../components/Pagination/Pagination";
 import styles from "./MainPage.module.scss";
 
 const MainPage = () => {
+  const navigate = useNavigate(); // useNavigate hook 추가
+  const [searchParams, setSearchParams] = useSearchParams(); // useSearchParams 추가
+
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -13,36 +18,63 @@ const MainPage = () => {
   // modal
   const [addModal, setAddModal] = useState(false);
 
+  // pagination
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const minRows = 10;
+  const emptyRows = minRows - customers.length;
+
   // fetch all customers
-  const fetchData = async () => {
+  const fetchData = async (page) => {
+    setError(false);
     try {
-      const customerData = await getCustomers();
-      setCustomers(customerData);
-      setLoading(false);
-    } catch {
+      const customerData = await getCustomers(page);
+      setCustomers(customerData.customers);
+      setTotalPages(customerData.totalPages);
+    } catch (error) {
+      console.error("Error fetching customer data:", error);
       setError(true);
+    } finally {
       setLoading(false);
     }
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    setSearchParams({ page: newPage });
+    navigate(`/main?page=${newPage}`);
+  };
+
+  // 이전 페이지로 이동하는 함수
+  const goToPrevPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+    navigate(`/main?page=${page - 1}`);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+  // 다음 페이지로 이동하는 함수
+  const goToNextPage = () => {
+    setPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    navigate(`/main?page=${page + 1}`);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+  // 해당 페이지로 설정 함수
+  const goToPage = (newPage) => {
+    setPage(newPage);
+    navigate(`/main?page=${newPage}`);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchData(page);
   }, []);
+
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
 
   return (
     <>
-      {/* <div className={styles.menuContainer}>
-        <p>JH 회원 관리 시스템</p>
-        <button
-          type="button"
-          className={styles.addButton}
-          onClick={() => {
-            setAddModal(true);
-          }}
-        >
-          신규 회원 추가
-        </button>
-      </div> */}
       <nav className={`navbar ${styles.navbar}`}>
         <div className="container-fluid">
           <a className={`navbar-brand ${styles["navbar-brand"]}`}>
@@ -87,23 +119,55 @@ const MainPage = () => {
         <tbody>
           {loading ? (
             <tr>
-              <th colSpan={6}>
+              <td colSpan={6}>
                 <Loading />
-              </th>
+              </td>
             </tr>
           ) : (
-            customers.map((customer) => (
-              <Customer
-                key={customer._id}
-                customer={customer}
-                fetchData={fetchData}
-              ></Customer>
-            ))
+            <>
+              {customers.map((customer, index) => (
+                <Customer
+                  key={customer._id}
+                  page={page}
+                  customer={customer}
+                  fetchData={fetchData}
+                  style={{
+                    height: "4rem",
+                    borderBottom:
+                      index === customers.length - 1
+                        ? "1px solid #dee2e6"
+                        : "none",
+                  }}
+                ></Customer>
+              ))}
+              {emptyRows > 0 &&
+                Array.from({ length: emptyRows }).map((_, index) => (
+                  <tr key={`empty-${index}`} style={{ height: "4rem" }}>
+                    <td
+                      colSpan={6}
+                      style={{
+                        borderBottom:
+                          index === emptyRows - 1
+                            ? "1px solid #dee2e6"
+                            : "none",
+                      }}
+                    ></td>
+                  </tr>
+                ))}
+            </>
           )}
         </tbody>
       </table>
+      <Pagination
+        page={page}
+        goToNextPage={goToNextPage}
+        goToPrevPage={goToPrevPage}
+        totalPages={totalPages}
+        goToPage={goToPage}
+      ></Pagination>
       {addModal && (
         <AddModal
+          page={page}
           addModal={addModal}
           setAddModal={setAddModal}
           fetchData={fetchData}

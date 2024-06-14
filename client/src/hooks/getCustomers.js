@@ -1,8 +1,10 @@
 import axios from "axios";
 
-const getCustomers = async () => {
+const getCustomers = async (page) => {
   try {
-    const response = await axios.get("http://localhost:5000/api/customers");
+    const response = await axios.get(
+      `http://localhost:5000/api/customers?page=${page}&limit=10`
+    );
     // loading 컴포넌트 확인 시간지연
     await new Promise((resolve) => setTimeout(resolve, 1000));
 

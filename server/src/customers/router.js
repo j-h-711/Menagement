@@ -4,9 +4,21 @@ const Customer = require("./model/customer.schema");
 
 // 회원 전체 정보 조회
 router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
   try {
-    const customers = await Customer.find();
-    res.status(200).json(customers);
+    const customers = await Customer.find().skip(skip).limit(limit);
+    const totalCustomers = await Customer.countDocuments();
+    const totalPages = Math.ceil(totalCustomers / limit);
+
+    res.status(200).json({
+      page,
+      totalPages,
+      totalCustomers,
+      customers,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
