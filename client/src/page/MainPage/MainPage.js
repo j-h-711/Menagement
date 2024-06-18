@@ -26,8 +26,9 @@ const MainPage = () => {
   const minRows = 10;
   const emptyRows = minRows - customers.length;
 
-  // fetch all customers
-  const fetchData = async (page) => {
+  // 페이지로 회원 목록 fetch
+  const fetchData = async (page, searchTerm = "") => {
+    setLoading(true);
     setError(false);
     try {
       const customerData = await getCustomers(page, searchTerm);
@@ -43,52 +44,64 @@ const MainPage = () => {
 
   // 검색어 입력시 검색 함수
   const handleSearch = (event) => {
-    event.preventDefault(); // 폼 submit 기본 동작 방지
+    event.preventDefault();
     const searchValue = event.target.elements.search.value;
-    setSearchTerm(searchValue); // 검색어 상태 업데이트
-    setSearchParams({ page: 1, search: searchValue }); // 쿼리 파라미터 업데이트
-    navigate(`/main?page=1&search=${searchValue}`); // 페이지 이동
-  };
-
-  // 지정 페이지 이동 함수
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    setSearchParams({ page: newPage });
-    navigate(`/main?page=${newPage}`);
+    setSearchTerm(searchValue);
+    setPage(1);
+    setSearchParams({ page: 1, search: searchValue });
+    navigate(`/main?page=${1}&search=${searchValue}`);
+    fetchData(1, searchValue);
   };
 
   // 이전 페이지로 이동하는 함수
   const goToPrevPage = () => {
     setPage((prevPage) => Math.max(prevPage - 1, 1));
     navigate(`/main?page=${page - 1}`);
+    fetchData(page - 1, searchTerm);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
+
   // 다음 페이지로 이동하는 함수
   const goToNextPage = () => {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
     navigate(`/main?page=${page + 1}`);
+    fetchData(page + 1, searchTerm);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
+
   // 해당 페이지로 설정 함수
   const goToPage = (newPage) => {
     setPage(newPage);
     navigate(`/main?page=${newPage}`);
+    fetchData(newPage, searchTerm);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
-    fetchData(page);
+    fetchData(1, "");
   }, []);
 
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
+    const currentPage = parseInt(searchParams.get("page")) || 1;
+    const currentSearchTerm = searchParams.get("search") || "";
+    setPage(currentPage);
+    setSearchTerm(currentSearchTerm);
+    fetchData(currentPage, currentSearchTerm);
+  }, [searchParams]);
 
   return (
     <>
       <nav className={`navbar ${styles.navbar}`}>
         <div className="container-fluid">
-          <a className={`navbar-brand ${styles["navbar-brand"]}`}>
+          {/* eslint-disable jsx-a11y/anchor-is-valid */}
+          <a
+            href="#"
+            className={`navbar-brand ${styles["navbar-brand"]}`}
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(`/main?page=${1}`);
+            }}
+          >
             JH Management System
           </a>
           <form className="d-flex" role="search">

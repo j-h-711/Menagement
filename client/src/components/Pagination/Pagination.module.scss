@@ -23,6 +23,20 @@
   align-items: center;
 }
 
+.moveButton {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  padding: none;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+}
+
 .space {
   width: 3rem;
 }

@@ -6,11 +6,14 @@ const Customer = require("./model/customer.schema");
 router.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 20;
+  const search = req.query.search || "";
   const skip = (page - 1) * limit;
 
   try {
-    const customers = await Customer.find().skip(skip).limit(limit);
-    const totalCustomers = await Customer.countDocuments();
+    const query = search ? { name: { $regex: search, $options: "i" } } : {};
+
+    const customers = await Customer.find(query).skip(skip).limit(limit);
+    const totalCustomers = await Customer.countDocuments(query);
     const totalPages = Math.ceil(totalCustomers / limit);
 
     res.status(200).json({
@@ -24,6 +27,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+module.exports = router;
 // 신규 고객 추가
 router.post("/add", async (req, res) => {
   const { name, birthday, gender, job, phone, address, etc } = req.body;

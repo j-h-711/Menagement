@@ -40,7 +40,7 @@ const HomePage = () => {
     try {
       await postLogin(username, password);
       successAlert("관리자님, 환영합니다.");
-      navigate("/main?page=1");
+      navigate(`/main?page=${1}`);
     } catch (error) {
       errorAlert("아이디&비밀번호를 정확하게 입력해주세요.");
       resetForm();

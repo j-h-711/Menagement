@@ -7,8 +7,6 @@ const getCustomers = async (page, searchTerm = "") => {
         searchTerm
       )}`
     );
-    // loading 컴포넌트 확인 시간지연
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (response?.data) return response.data;
   } catch (error) {

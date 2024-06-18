@@ -33,7 +33,7 @@ const Pagination = ({
   return (
     <div className={styles.PageContainer}>
       {page > 1 ? (
-        <button className={styles.button} onClick={goToPrevPage}>
+        <button className={styles.moveButton} onClick={goToPrevPage}>
           {"<"}
         </button>
       ) : (
@@ -53,7 +53,7 @@ const Pagination = ({
       ))}
 
       {page < totalPages ? (
-        <button className={styles.button} onClick={goToNextPage}>
+        <button className={styles.moveButton} onClick={goToNextPage}>
           {">"}
         </button>
       ) : (
