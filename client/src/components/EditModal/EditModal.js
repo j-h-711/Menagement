@@ -192,8 +192,9 @@ const EditModal = ({ customer, editModal, setEditModal, fetchData, page }) => {
                 <option value="">직업을 선택하세요</option>
                 <option value="직장인">직장인</option>
                 <option value="자영업">자영업</option>
-                <option value="학생">학생</option>
                 <option value="전문직">전문직</option>
+                <option value="공무원">공무원</option>
+                <option value="학생">학생</option>
                 <option value="주부">주부</option>
                 <option value="무직">무직</option>
               </select>

@@ -8,8 +8,9 @@ import Pagination from "../../components/Pagination/Pagination";
 import styles from "./MainPage.module.scss";
 
 const MainPage = () => {
-  const navigate = useNavigate(); // useNavigate hook 추가
-  const [searchParams, setSearchParams] = useSearchParams(); // useSearchParams 추가
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ const MainPage = () => {
   const fetchData = async (page) => {
     setError(false);
     try {
-      const customerData = await getCustomers(page);
+      const customerData = await getCustomers(page, searchTerm);
       setCustomers(customerData.customers);
       setTotalPages(customerData.totalPages);
     } catch (error) {
@@ -40,6 +41,16 @@ const MainPage = () => {
     }
   };
 
+  // 검색어 입력시 검색 함수
+  const handleSearch = (event) => {
+    event.preventDefault(); // 폼 submit 기본 동작 방지
+    const searchValue = event.target.elements.search.value;
+    setSearchTerm(searchValue); // 검색어 상태 업데이트
+    setSearchParams({ page: 1, search: searchValue }); // 쿼리 파라미터 업데이트
+    navigate(`/main?page=1&search=${searchValue}`); // 페이지 이동
+  };
+
+  // 지정 페이지 이동 함수
   const handlePageChange = (newPage) => {
     setPage(newPage);
     setSearchParams({ page: newPage });
@@ -86,7 +97,8 @@ const MainPage = () => {
               type="search"
               placeholder="회원이름 검색..."
               aria-label="Search"
-            ></input>
+              name="search"
+            />
             <button
               className={`btn btn-outline-success ${styles["searchBtn"]}`}
               type="submit"
